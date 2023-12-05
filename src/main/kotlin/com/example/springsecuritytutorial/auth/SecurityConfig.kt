@@ -42,8 +42,8 @@ class SecurityConfig(
             .sessionManagement { it.sessionCreationPolicy(SessionCreationPolicy.STATELESS) }
             .authorizeHttpRequests {
                 it.requestMatchers(*createMvcRequestMatcherForWhiteList(mvcRequestMatcherBuilder)).permitAll()
-                    .requestMatchers(PathRequest.toH2Console())
-                    .permitAll()
+                    .requestMatchers(PathRequest.toH2Console()).permitAll()
+                    .requestMatchers(mvcRequestMatcherBuilder.pattern("/api/member/**")).hasRole("MEMBER")
                     .anyRequest()
                     .authenticated()
             }

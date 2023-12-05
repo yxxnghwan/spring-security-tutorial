@@ -9,6 +9,7 @@ import com.example.springsecuritytutorial.member.application.dto.LoginCommand
 import com.example.springsecuritytutorial.member.application.dto.MemberInfo
 import com.example.springsecuritytutorial.member.application.dto.SignUpCommand
 import com.example.springsecuritytutorial.member.domain.repository.MemberRepository
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
 import org.springframework.stereotype.Service
@@ -45,5 +46,11 @@ class MemberService(
         val authentication = authenticationManagerBuilder.`object`.authenticate(authenticationToken)
 
         return AuthTokenInfo.from(jwtTokenProvider.createToken(authentication))
+    }
+
+    fun getMyInfo(id: Long): MemberInfo {
+        val member = memberRepository.findByIdOrNull(id)
+            ?: throw RuntimeException("회원번호(${id})가 존재하지 않는 유저입니다.")
+        return MemberInfo.from(member)
     }
 }

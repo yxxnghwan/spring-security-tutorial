@@ -24,7 +24,8 @@ class CustomUserDetailsService(
 
     private fun createUserDetails(member: Member): UserDetails {
         val memberRoles = memberRoleRepository.findByMemberId(member.id)
-        return User(
+        return CustomUser(
+            member.id,
             member.loginId,
             passwordEncoder.encode(member.password),
             memberRoles.map { SimpleGrantedAuthority("ROLE_${it.role}") }

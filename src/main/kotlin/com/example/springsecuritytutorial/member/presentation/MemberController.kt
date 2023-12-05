@@ -1,11 +1,14 @@
 package com.example.springsecuritytutorial.member.presentation
 
 import com.example.springsecuritytutorial.auth.AuthTokenInfo
+import com.example.springsecuritytutorial.auth.CustomUser
 import com.example.springsecuritytutorial.member.application.MemberService
 import com.example.springsecuritytutorial.member.presentation.dto.LoginRequest
 import com.example.springsecuritytutorial.member.presentation.dto.MemberResponse
 import com.example.springsecuritytutorial.member.presentation.dto.SignUpRequest
 import org.springframework.http.ResponseEntity
+import org.springframework.security.core.context.SecurityContextHolder
+import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
@@ -27,5 +30,12 @@ class MemberController(
     fun login(@RequestBody request: LoginRequest): ResponseEntity<AuthTokenInfo> {
         val authTokenInfo = memberService.login(request.toCommand())
         return ResponseEntity.ok(authTokenInfo)
+    }
+
+    @GetMapping("/me")
+    fun searchMyInfo(): ResponseEntity<MemberResponse> {
+        val memberId = (SecurityContextHolder.getContext().authentication.principal as CustomUser).memberId
+        val memberInfo = memberService.getMyInfo(memberId)
+        return ResponseEntity.ok(MemberResponse.from(memberInfo))
     }
 }
