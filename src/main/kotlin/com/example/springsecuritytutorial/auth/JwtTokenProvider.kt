@@ -22,7 +22,7 @@ class JwtTokenProvider {
         const val EXPIRATION_MILLISECONDS: Long = 1000L * 60L * 30L
     }
 
-    @Value("\${jwt.secret}")
+    @Value("\${key.secret}")
     private lateinit var secretKey: String
 
     private val key by lazy { Keys.hmacShaKeyFor(Decoders.BASE64.decode(secretKey)) }
